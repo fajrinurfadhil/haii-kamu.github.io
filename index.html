@@ -3,249 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halo Sayang</title>
+    <title>Our Scrapbook</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #d6cfc3;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #d2b48c; /* Warna cokelat kertas kraft */
+            background-image: url('bg-kraft.jpg'); /* Opsional: gambar tekstur kertas */
+            background-size: cover;
+            font-family: 'Quicksand', sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .book-container {
-            position: relative;
-            width: 300px;
-            height: 450px;
-            perspective: 1000px;
-            margin-bottom: 20px;
+        /* Container Buku */
+        #album {
+            width: 350px; /* Ukuran pas untuk layar HP */
+            height: 500px;
         }
 
         .page {
-            position: absolute;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .page img {
             width: 100%;
             height: 100%;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transform-origin: left center;
-            transition: transform 0.8s ease;
-            transform-style: preserve-3d;
+            object-fit: cover;
+        }
+
+        /* Tombol Navigasi Bawah */
+        .controls {
+            position: fixed;
+            bottom: 30px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 15px;
-            box-sizing: border-box;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .flipped {
-            transform: rotateY(-180deg);
-        }
-
-        #page3 { z-index: 1; }
-        #page2 { z-index: 2; }
-        #page1 { z-index: 3; }
-
-        .page-content {
-            backface-visibility: hidden;
-            width: 100%;
-            height: 100%;
+            gap: 20px;
+            z-index: 100;
         }
 
         .btn {
-            background-color: #7b5b5c;
+            background-color: #7d5a50;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 12px 20px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: background 0.3s;
-            margin: 5px;
-        }
-        
-        .btn:hover { background-color: #5c4344; }
-        
-        .nav-buttons {
-            display: none;
-        }
-        
-        .nav-buttons button {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            font-size: 20px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+            font-size: 16px;
         }
 
-        .polaroid {
-            background: white;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin: 10px 0;
-            width: 80%;
-        }
-        
-        .polaroid img {
-            width: 100%;
-            display: block;
-        }
-
-        .modal {
+        /* Overlay Popup Pesan */
+        #msgPopup {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background: #f7f3e8;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff8f0;
             padding: 20px;
             border-radius: 15px;
-            text-align: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            z-index: 200;
             width: 80%;
             max-width: 300px;
+            text-align: center;
         }
-        
+
         textarea {
             width: 100%;
             height: 100px;
+            margin: 10px 0;
+            border: 1px solid #7d5a50;
             border-radius: 10px;
-            border: 1px solid #ccc;
             padding: 10px;
-            box-sizing: border-box;
-            margin-top: 10px;
-            font-family: inherit;
         }
     </style>
 </head>
 <body>
 
-    <div class="book-container">
-        <div class="page" id="page3" style="background-color: #333; color: white;">
-            <div class="page-content">
-                <h2>Thank You</h2>
-                <p>Special Memories</p>
-            </div>
-        </div>
-
-        <div class="page" id="page2" style="background-color: #f4e8d1;">
-            <div class="page-content">
-                <div class="polaroid">
-                    <img src="https://via.placeholder.com/150x150" alt="Foto Kita">
-                </div>
-                <h3>Happy Birthday!</h3>
-                <p style="font-size: 14px;">Semoga keinginan baik kita disegerakan ya.</p>
-            </div>
-        </div>
-
-        <div class="page" id="page1" style="background-color: #5c4c44; color: white;">
-            <div class="page-content">
-                <div class="polaroid">
-                    <img src="https://via.placeholder.com/150x200" alt="Cover">
-                </div>
-                <h2 style="font-family: cursive;">Happy<br>Special Day</h2>
-            </div>
+    <div id="album">
+        <div class="hard"><img src="cover.jpg"></div>
+        
+        <div><img src="page1.png"></div>
+        <div><img src="page2.png"></div>
+        <div><img src="page3.png"></div>
+        
+        <div class="hard">
+            <img src="last-page.png">
+            <button class="btn" style="position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);" onclick="openPopup()">Kirim Pesan</button>
         </div>
     </div>
 
-    <button id="openBtn" class="btn">Open</button>
-
-    <div id="navButtons" class="nav-buttons">
-        <button id="prevBtn" class="btn">←</button>
-        <button id="nextBtn" class="btn">→</button>
+    <div class="controls">
+        <button class="btn" onclick="$('#album').turn('previous')">←</button>
+        <button class="btn" onclick="$('#album').turn('next')">→</button>
     </div>
 
-    <button id="kirimPesanBtn" class="btn" style="display: none;">Kirim Pesan</button>
-
-    <div id="messageModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalTitle">Tulis pesan</h3>
-            <div id="modalBody">
-                <textarea id="pesanInput" placeholder="Tulis sesuatu..."></textarea>
-                <br><br>
-                <button id="submitPesan" class="btn">Kirim</button>
-            </div>
-        </div>
+    <div id="msgPopup">
+        <h3>Tulis pesan untukku:</h3>
+        <textarea id="pesanInput" placeholder="Halo sayang..."></textarea>
+        <br>
+        <button class="btn" onclick="kirimWA()">Kirim ke WhatsApp</button>
+        <button class="btn" style="background: grey;" onclick="closePopup()">Batal</button>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://rawcdn.githack.com/blasten/turn.js/master/turn.min.js"></script>
 
     <script>
-        let currentPage = 1;
-        const totalPages = 3;
-
-        const openBtn = document.getElementById('openBtn');
-        const navButtons = document.getElementById('navButtons');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const kirimPesanBtn = document.getElementById('kirimPesanBtn');
-        
-        const modal = document.getElementById('messageModal');
-        const submitPesan = document.getElementById('submitPesan');
-        const pesanInput = document.getElementById('pesanInput');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-
-        openBtn.addEventListener('click', () => {
-            document.getElementById('page1').classList.add('flipped');
-            openBtn.style.display = 'none';
-            navButtons.style.display = 'block';
-            currentPage = 2;
+        $(document).ready(function() {
+            // Inisialisasi efek buku
+            $("#album").turn({
+                width: 350,
+                height: 500,
+                autoCenter: true,
+                duration: 1000 // Kecepatan membalik halaman
+            });
         });
 
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                document.getElementById('page' + currentPage).classList.add('flipped');
-                currentPage++;
+        function openPopup() {
+            document.getElementById('msgPopup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('msgPopup').style.display = 'none';
+        }
+
+        function kirimWA() {
+            const pesan = document.getElementById('pesanInput').value;
+            if (pesan.trim() === "") {
+                alert("Jangan dikosongin ya :)");
+                return;
             }
-            
-            if(currentPage === totalPages) {
-                navButtons.style.display = 'none';
-                kirimPesanBtn.style.display = 'block';
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 2) {
-                currentPage--;
-                document.getElementById('page' + currentPage).classList.remove('flipped');
-            } else if (currentPage === 2) {
-                currentPage = 1;
-                document.getElementById('page1').classList.remove('flipped');
-                navButtons.style.display = 'none';
-                openBtn.style.display = 'block';
-            }
-        });
-
-        kirimPesanBtn.addEventListener('click', () => {
-            modal.style.display = 'flex';
-        });
-
-        submitPesan.addEventListener('click', () => {
-            if (pesanInput.value.trim() === '') {
-                alert('Jangan dikosongin ya :)');
-            } else {
-                modalTitle.innerText = "Mengirim pesan...";
-                modalBody.innerHTML = "<h3>⏳</h3>";
-                
-                setTimeout(() => {
-                    modalTitle.innerText = "Pesan berhasil dikirim!";
-                    modalBody.innerHTML = "<button class='btn' onclick='location.reload()'>OK</button>";
-                }, 2000);
-            }
-        });
+            // Ganti nomor di bawah dengan nomormu sendiri
+            const noWA = "6283114532706"; 
+            const url = `https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`;
+            window.open(url, '_blank');
+        }
     </script>
 </body>
 </html>
