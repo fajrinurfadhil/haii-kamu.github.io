@@ -10,7 +10,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #e3dcd1;
+            background-color: #e3dcd1; /* Warna background abu-abu kertas yang cocok dengan tema B&W */
             font-family: 'Quicksand', sans-serif;
             overflow: hidden;
             display: flex;
@@ -19,7 +19,7 @@
             height: 100vh;
         }
 
-        
+        /* Wrapper untuk auto-scale di HP */
         #book-wrapper {
             display: flex;
             justify-content: center;
@@ -29,8 +29,8 @@
         }
 
         #album {
-            width: 700px;
-            height: 500px;
+            width: 700px; /* Lebar total 2 halaman terbuka */
+            height: 500px; /* Tinggi buku */
         }
 
         .page {
@@ -43,7 +43,7 @@
             object-fit: cover;
         }
 
-        
+        /* Tombol Navigasi */
         .controls {
             position: fixed;
             bottom: 20px;
@@ -53,7 +53,7 @@
         }
 
         .btn {
-            background-color: #333; 
+            background-color: #333; /* Warna tombol hitam menyesuaikan tema */
             color: white;
             border: none;
             padding: 12px 25px;
@@ -65,7 +65,7 @@
             font-weight: bold;
         }
 
-      
+        /* Halaman Penutup Buatan untuk Tombol */
         .last-page {
             display: flex;
             flex-direction: column;
@@ -80,7 +80,7 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38bIxsDCAAEGAAFEgHBSXoK2AAAAABJRU5ErkJggg=='); /* Tekstur noise tipis */
         }
 
-        
+        /* Overlay Popup Pesan */
         #msgPopup {
             display: none;
             position: fixed;
@@ -111,6 +111,11 @@
     </style>
 </head>
 <body>
+
+    <audio id="bg-music" loop>
+        <source src="backsound.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicBtn" class="btn" style="position: fixed; top: 20px; right: 20px; z-index: 999; padding: 10px 15px; font-size: 14px;" onclick="toggleMusic()">🎵 Play Music</button>
 
     <div id="book-wrapper">
         <div id="album">
@@ -151,18 +156,18 @@
 
     <script>
         $(document).ready(function() {
-            
+            // Inisialisasi Buku
             $("#album").turn({
                 width: 700,
                 height: 500,
                 autoCenter: true,
-                display: 'double',
+                display: 'double', // Memaksa agar selalu 2 halaman bersebelahan
                 elevation: 50,
                 gradients: true,
                 turnCorners: "bl,br"
             });
 
-            
+            // Fungsi Auto-Scale agar buku selalu muat di layar HP
             function resizeBook() {
                 var viewportWidth = $(window).width();
                 var viewportHeight = $(window).height();
@@ -170,7 +175,7 @@
                 var bookWidth = 700;
                 var bookHeight = 500;
 
-                
+                // Hitung skala agar pas di layar (dikurangi sedikit untuk padding)
                 var scale = Math.min((viewportWidth - 20) / bookWidth, (viewportHeight - 120) / bookHeight);
                 
                 $('#album').css({
@@ -179,12 +184,36 @@
                 });
             }
 
-            
+            // Jalankan resize saat layar diputar/diload
             $(window).resize(resizeBook);
             resizeBook();
         });
 
-        
+        // --- FUNGSI MUSIK BARU ---
+        var music = document.getElementById("bg-music");
+        var musicBtn = document.getElementById("musicBtn");
+        var isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerHTML = "🎵 Play Music";
+            } else {
+                music.play();
+                musicBtn.innerHTML = "🎶 Pause Music";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Memutar musik otomatis saat layar pertama kali disentuh/diklik (opsional)
+        $(document).one('click', function(e) {
+            // Jangan jalankan jika yang diklik adalah tombol musik itu sendiri
+            if (e.target.id !== 'musicBtn' && !isPlaying) {
+                toggleMusic();
+            }
+        });
+
+        // --- FUNGSI POPUP PESAN ---
         function openPopup() {
             document.getElementById('msgPopup').style.display = 'block';
         }
@@ -199,7 +228,7 @@
                 alert("Jangan dikosongin ya :)");
                 return;
             }
-            
+            // GANTI NOMOR WA DI BAWAH INI DENGAN NOMORMU (Gunakan format 62...)
             const noWA = "6283114532706"; 
             const url = `https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`;
             window.open(url, '_blank');
